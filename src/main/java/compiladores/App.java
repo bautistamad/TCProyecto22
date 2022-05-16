@@ -11,7 +11,7 @@ public class App {
         System.out.println("Hello, Compilador!!!");
         // create a CharStream that reads from file
         // CharStream input = CharStreams.fromFileName("input/entrada.txt");
-        CharStream input = CharStreams.fromFileName("input/prueba.txt");
+        CharStream input = CharStreams.fromFileName("input/code.txt");
 
         // create a lexer that feeds off of input CharStream
         compiladoresLexer lexer = new compiladoresLexer(input);

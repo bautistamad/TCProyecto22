@@ -30,6 +30,5 @@ int funcionMia(int i = 4, double x = 3.33){
         int i = 2;
         int a = 23;
     }
-
     return;
 }

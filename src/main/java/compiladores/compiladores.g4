@@ -149,13 +149,16 @@ bloque_funcion: instrucciones_funcion
           | return_tipo
           ;
 
-instrucciones_funcion: instruccion_funcion instrucciones_funcion;
+instrucciones_funcion: instruccion_funcion instrucciones_funcion
+                     |
+                     ;
 
 instruccion_funcion : declaracion PyC
             | asignacion PyC
             | bucle_while 
             | condicional_if
             | bucle_for
+            | return_tipo
             ;
 
 return_tipo: IRETURN VAR PyC
