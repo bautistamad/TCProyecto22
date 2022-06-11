@@ -3,6 +3,8 @@
 Verifica que las palabras usadas pertenezcan al lenguaje.
 (Verifica ortografía)
 
+Si las palabras no son del lenguaje ==> error lexico
+
 Lo vamos a implementar utilizando expresiones regulares.
 Las expresiones regulares tienen implementacion ITERATIVA.
 
@@ -69,57 +71,3 @@ $ s )              ) ) $  match
 $ s                  ) $  derivar
 $                    ) $  ERROR
 
-
-AS Ascendente
-
-Reglas : Desplazar
-         Reducir
-
-entrada: (())()
-
-Regla: s : ( s ) s
-         |
-         ;
-
-$            ( ( ) ) ( ) $ Desplazar
-$ (            ( ) ) ( ) $ Desplazar
-$ ( (            ) ) ( ) $ Reducir
-$ ( ( s          ) ) ( ) $ Desplazar
-$ ( ( s )          ) ( ) $ Reducir
-$ ( ( s ) s        ) ( ) $ Reducir
-$ ( s              ) ( ) $ Desplazar
-$ ( s )              ( ) $ Desplazar
-$ ( s ) (              ) $ Reducir
-$ ( s ) ( s            ) $ Desplazar
-$ ( s ) ( s )            $ Reducir
-$ ( s ) ( s ) s          $ Reducir
-$ ( s ) s                $ Reducir
-$ s                      $ OK
-
-entrada: (()
-
-Regla: s : ( s ) s
-         |
-         ;
-
-$            ( ( ) $ Desplazar
-$ (            ( ) $ Desplazar
-$ ( (            ) $ Reducir
-$ ( ( s          ) $ Desplazar
-$ ( ( s )          $ Reducir
-$ ( ( s ) s        $ Reducir
-$ ( s              $ ERROR
-
-
-entrada: ())
-
-Regla: s : ( s ) s
-         |
-         ;
-
-$            ( ) ) $ Desplazar
-$ (            ) ) $ Reducir
-$ ( s          ) ) $ Desplazar
-$ ( s )          ) $ Reducir
-$ ( s ) s        ) $ Reducir
-$ s              ) $ ERROR

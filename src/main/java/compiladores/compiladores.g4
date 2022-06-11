@@ -3,20 +3,6 @@ grammar compiladores;
 @header {
 package compiladores;
 }
-// Dado el proyecto base de Java con ANTLR presentado en clases, realizar el archivo .g4 con las expresiones regulares y reglas sintácticas que contemple las siguientes instrucciones:
-
-// declaracion -> int x;
-//                double y;
-//                int z = 0;
-//                double w, q, t;
-//                int a = 5, b, c = 10;
-
-// asignacion -> x = 1;
-//               z = y;
-
-// iwhile -> while (x comp y) { instrucciones }
-
-// NOTA: Entregar solamente el archivo *.g4
 
 fragment DIGITO : [0-9] ;
 
@@ -66,11 +52,13 @@ IRETURN: 'return';
 // Nombre de variables
 VAR: [a-zA-Z]+ ;
 
+// Skip
 WS : [ \t\n\r] -> skip;
 
-// Declaracion de entero y doble en numeros
+// Declaracion de entero, doble y bool en numeros
 ENTERO : DIGITO+ ;
 DOBLE: DIGITO+ '.' DIGITO+;
+BOOLEANO: ( TRUE | FALSE );
 
 programa : instrucciones EOF ;
 
@@ -89,8 +77,10 @@ instruccion : declaracion PyC
 
 declaracion: INT VAR concatenacion 
             | DOUBLE VAR concatenacion 
+            | BOOL VAR concatenacion 
             | INT asignacion concatenacion 
             | DOUBLE asignacion concatenacion 
+            | BOOL asignacion concatenacion 
             ;
 
 concatenacion: COM VAR concatenacion 
@@ -101,6 +91,7 @@ concatenacion: COM VAR concatenacion
 asignacion: VAR IGU VAR
             | VAR IGU ENTERO
             | VAR IGU DOBLE
+            | VAR IGU BOOLEANO
             ;
 
 bloque: LA instrucciones LC;
@@ -120,6 +111,8 @@ condicional_if: IIF PA cond PC bloque;
 bucle_for: IFOR PA (declaracion PyC cond PyC post_pre_incremento ) PC bloque;
 
 // Declaracion Funcion
+// e 34:4 mismatched input 'return' expecting {'int', 'double', 'while', 'if', 'for', VAR}
+// ne 35:0 mismatched input '}' expecting {'int', 'double', 'while', 'if', 'for', 'return', VAR}
 // int nombre (int,float,bool);
 
 declaracion_funcion: tipo_var VAR PA declaracion_argumentos PC PyC;
@@ -133,7 +126,7 @@ concatenacion_argumentos_declaracion: COM declaracion_argumentos
 // Asignacion funcion
 // int nombre (int i,float x,bool z){   bloque   }
 
-asignacion_funcion: tipo_var VAR PA asignacion_argumentos PC (LA bloque_funcion LC);
+asignacion_funcion: tipo_var VAR PA asignacion_argumentos PC bloque_funcion;
 
 asignacion_argumentos: INT VAR concatenacion_argumentos_asignacion 
                                  | DOUBLE VAR concatenacion_argumentos_asignacion 
@@ -145,9 +138,7 @@ concatenacion_argumentos_asignacion: COM asignacion_argumentos
               |
               ;
 
-bloque_funcion: instrucciones_funcion
-          | return_tipo
-          ;
+bloque_funcion: LA instrucciones_funcion LC;
 
 instrucciones_funcion: instruccion_funcion instrucciones_funcion
                      |
@@ -158,12 +149,12 @@ instruccion_funcion : declaracion PyC
             | bucle_while 
             | condicional_if
             | bucle_for
-            | return_tipo
+            | return_tipo PyC
             ;
 
-return_tipo: IRETURN VAR PyC
-           | IRETURN factor PyC
-           | IRETURN PyC
+return_tipo: IRETURN VAR
+           | IRETURN factor
+           | IRETURN
            ;
 
 tipo_var: INT
@@ -210,6 +201,7 @@ t: MULT term
 
 factor: ENTERO
       | DOBLE
+      | BOOLEANO
       | VAR
       | PA e PC
       ;
